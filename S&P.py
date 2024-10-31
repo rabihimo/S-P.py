@@ -53,3 +53,53 @@ try:
 
 except Exception as e:
     st.error(f"An error occurred: {e}")
+    from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Define the top 3 S&P 500 companies
+tickers = ['AAPL', 'MSFT', 'GOOGL']  # Adjust tickers as needed
+
+# Download historical data
+data = yf.download(tickers, period="5y")  # Adjust the period as needed
+
+# Extract adjusted closing prices
+adj_close = data['Adj Close']
+
+# Ensure there is no missing data
+adj_close.dropna(inplace=True)
+
+# Plot the adjusted closing prices
+plt.figure(figsize=(14, 7))
+for ticker in tickers:
+    plt.plot(adj_close.index, adj_close[ticker], label=ticker)
+
+plt.xlabel('Date')
+plt.ylabel('Adjusted Closing Price')
+plt.title('Adjusted Closing Price of Top 3 S&P 500 Companies')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+# Predictive modeling for AAPL (you can repeat for other tickers)
+X = np.arange(len(adj_close['AAPL'])).reshape(-1, 1)  # Use index as predictor
+y = adj_close['AAPL'].values  # Make sure this is a 1D array
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)
+
+# Plot the predictions against actual values
+plt.figure(figsize=(10, 6))
+plt.scatter(X_test, y_test, label='Actual Prices', color='blue')
+plt.plot(X_test, predictions, color='red', label='Predicted Prices')
+
+plt.xlabel('Time Index')
+plt.ylabel('Adjusted Close Price')
+plt.title('Linear Regression Prediction for AAPL')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+print("Note: This is a very basic linear regression example. For more accurate predictions, consider using more sophisticated models, adding more features, and handling time series data appropriately.")
