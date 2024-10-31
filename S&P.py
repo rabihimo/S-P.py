@@ -9,26 +9,6 @@ import pandas as pd
 st.set_page_config(layout="wide", page_title="WebApp_Demo")
 
 st.sidebar.title("Input")
-symbol = st.sidebar.text_input('Please enter the stock symbol: ', 'NVDA').upper()
-
-col1, col2 = st.sidebar.columns(2, gap="medium")
-with col1:
-    sdate = st.date_input('Start Date', value=datetime.date(2024, 1, 1))
-with col2:
-    edate = st.date_input('End Date', value=datetime.date.today())
-
-st.title(f"{symbol}")
-
-try:
-    stock = yf.Ticker(symbol)
-    st.write(f"# Sector : {stock.info['sector']}")
-    st.write(f"# Company Beta : {stock.info['beta']}")
-
-    data = yf.download(symbol, start=sdate, end=edate)
-    if data.empty:
-        st.error(f"No data found for symbol '{symbol}' within the specified date range.")
-    else:
-        st.line_chart(data['Close'], x_label="Date", y_label="Close")
 
     # S&P 500 comparison (Day-by-Day Fluctuation)
     st.header("S&P 500 Top 5 Comparison (Day-by-Day Fluctuation)") # This and subsequent lines should be indented within the 'try' block
